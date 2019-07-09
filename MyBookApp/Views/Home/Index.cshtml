@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Book>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2>Home Page</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>@Html.DisplayNameFor(model => model.Name)</td>
+            <td>@Html.DisplayNameFor(model => model.Description)</td>
+            <td>@Html.DisplayNameFor(model => model.Author)</td>
+            <td>@Html.DisplayNameFor(model => model.bookCategory.Name)</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@Html.DisplayFor(model => item.Name)</td>
+            <td>@Html.DisplayFor(model => item.Description)</td>
+            <td>@Html.DisplayFor(model => item.Author)</td>
+            <td>@Html.DisplayFor(model => item.bookCategory.Name)</td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.Count<Book>() == 0)
+{
+    <div class="alert alert-danger">Zero Book</div>		 
+}
