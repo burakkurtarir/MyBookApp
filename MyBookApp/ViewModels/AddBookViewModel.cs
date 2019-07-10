@@ -22,8 +22,11 @@ namespace MyBookApp.ViewModels
             }
         }
         public string BookName { get; set; }
+        public string BookImageUrl { get; set; }
         public string BookDescription { get; set; }
         public string BookAuthor { get; set; }
+        public int BookStock { get; set; }
+        public float BookPrice { get; set; }
         public int BookCategoryId { get; set; }
         public List<SelectListItem> BookCategories { get; set; }
     }

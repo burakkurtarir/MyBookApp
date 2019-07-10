@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyBookApp.Models;
@@ -58,8 +59,10 @@ namespace MyBookApp.Controllers
             {
                 var book = new Book {
                     Name = viewModel.BookName,
+                    ImageUrl = viewModel.BookImageUrl,
                     Description = viewModel.BookDescription,
                     Author = viewModel.BookAuthor,
+                    Stock = viewModel.BookStock,
                     BookCategoryId = viewModel.BookCategoryId
                 };
 
@@ -67,6 +70,57 @@ namespace MyBookApp.Controllers
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> BuyBook(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var book = await _context.Books.Include(b => b.bookCategory).FirstOrDefaultAsync(b => b.Id == id);
+            if (book == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(book);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BuyBook(Book book)
+        {
+            if (book == null)
+            {
+                RedirectToAction("BuyBook");
+            }
+            var myBook = await _context.Books.FirstOrDefaultAsync(b => b.Id == book.Id);
+            if (myBook == null)
+            {
+                RedirectToAction("BuyBook");
+            }
+            if (myBook.Stock >= 1)
+            {
+                //Kitap satın alındığı için stok 1 azaltıldı ve güncelleştirildi
+                myBook.Stock -= 1;
+                _context.Books.Update(myBook);
+                await _context.SaveChangesAsync();
+
+                //TempData["AlertCode"] = AlertCodes.Success;
+                TempData["AlertTitle"] = "Başarılı";
+                TempData["AlertMessage"] = "Kitap satın alındı";
+                TempData["AlertType"] = "success";
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                TempData["AlertTitle"] = "Hata";
+                TempData["AlertMessage"] = "Kitap stokta yok";
+                TempData["AlertType"] = "danger";
+
+                return RedirectToAction("Index");
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

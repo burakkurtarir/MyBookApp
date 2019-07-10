@@ -16,10 +16,19 @@ namespace MyBookApp.Models
         public string Name { get; set; }
 
         [Required]
+        public string ImageUrl { get; set; }
+
+        [Required]
         public string Description { get; set; }
 
         [Required]
         public string Author { get; set; }
+
+        [Required]
+        public int Stock { get; set; }
+
+        [Required]
+        public float Price { get; set; }
 
         public int BookCategoryId { get; set; }
 

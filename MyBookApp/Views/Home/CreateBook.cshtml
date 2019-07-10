@@ -14,6 +14,11 @@
             <span asp-validation-for="BookName" class="text-danger"></span>
         </div>
         <div class="form-group">
+            <label asp-for="BookImageUrl" class="control-label"></label>
+            <input asp-for="BookImageUrl" class="form-control" />
+            <span asp-validation-for="BookImageUrl" class="text-danger"></span>
+        </div>
+        <div class="form-group">
             <label asp-for="BookDescription" class="control-label"></label>
             <input asp-for="BookDescription" class="form-control" />
             <span asp-validation-for="BookDescription" class="text-danger"></span>
@@ -24,10 +29,20 @@
             <span asp-validation-for="BookAuthor" class="text-danger"></span>
         </div>
         <div class="form-group">
+            <label asp-for="BookStock" class="control-label"></label>
+            <input asp-for="BookStock" class="form-control" type="number" />
+            <span asp-validation-for="BookStock" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="BookPrice" class="control-label"></label>
+            <input asp-for="BookPrice" class="form-control" type="number" />
+            <span asp-validation-for="BookPrice" class="text-danger"></span>
+        </div>
+        <div class="form-group">
             <select asp-for="BookCategoryId" asp-items="Model.BookCategories"></select>
         </div>
         <div class="form-group">
-            <input type="submit" value="Create Book" class="btn btn-default"/>
+            <input type="submit" value="Create Book" class="btn btn-default" />
         </div>
     </form>
 </div>

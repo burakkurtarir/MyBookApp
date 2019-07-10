@@ -1,0 +1,31 @@
+﻿@model Book
+@{
+    ViewData["Title"] = "Buy Book";
+}
+
+<hr />
+<h2>Buy Book</h2>
+<hr />
+
+<div class="col-md-12">
+    <div class="col-md-6">
+        <img src="@Model.ImageUrl" style="width:50%; height:40%;" />
+    </div>
+    <div class="col-md-6">
+        <p>Kitap: @Model.Name</p>
+        <p>Yazar: @Model.Author</p>
+        <p>Kategori: @Model.bookCategory.Name</p>
+        <p>Açıklama: @Model.Description</p>
+        <p>Stok: @Model.Stock Adet</p>
+        <p>Fiyat: @Model.Price TL</p>
+        <form asp-action="BuyBook">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="form-group">
+                <input type="hidden" value="@Model.Id" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Kitabı Satın Al" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
