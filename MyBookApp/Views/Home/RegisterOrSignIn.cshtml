@@ -1,0 +1,83 @@
+﻿@model BookUser
+@{
+    ViewData["Title"] = "Register Or Sign In";
+}
+
+@if (TempData["RegisterMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible show" role="alert">
+        <strong>@TempData["RegisterMessage"]!</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@if (TempData["SignInMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible show" role="alert">
+        <strong>@TempData["SignInMessage"]!</strong>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+<div class="container-fluid">
+    <!-- If you have an account, Sign in -->
+    <div class="row" style="padding:10px;">
+        <h3>If you have an account, Sign in here</h3>
+        <form asp-action="SignIn">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" type="password" />
+                <span asp-validation-for="Password"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Sign In" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<hr />
+
+<div class="container-fluid">
+    <!-- If you don't have an account, Register -->
+    <div class="row" style="padding:10px;">
+        <h3>If you don't have an account, Register here</h3>
+        <form asp-action="Register">
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" type="password" />
+                <span asp-validation-for="Password"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Address" class="control-label"></label>
+                <input asp-for="Address" class="form-control" />
+                <span asp-validation-for="Address"></span>
+            </div>
+            <div class="form-group">
+                <input type="hidden" asp-for="Role" value="User" />
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Register" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+

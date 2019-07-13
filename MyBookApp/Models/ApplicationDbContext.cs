@@ -15,5 +15,7 @@ namespace MyBookApp.Models
 
         public DbSet<BookCategory> BookCategories { get; set; }
         public DbSet<Book> Books { get; set; }
+        public DbSet<BookUser> BookUsers { get; set; }
+        public DbSet<BooksThatBought> BooksThatBoughts { get; set; }
     }
 }

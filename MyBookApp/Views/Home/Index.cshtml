@@ -16,15 +16,19 @@
         </button>
     </div>
 }
+
+@*<h2>@Context.User.Identity.Name</h2>
+<h2>@Context.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value</h2>*@
+
 <div class="container">
     @foreach (var item in Model)
     {
         <div class="col-md-4 col-sm-6 col-xs-12">
-            <div style="padding:8px;">
+            <div class="div-book">
                 <img src="@item.ImageUrl" style="width:50%; height:50%; margin-bottom:10px;" />
-                <p>Kitap: @item.Name</p>
-                <p>Yazar: @item.Author</p>
-                <p>Kategori: @item.bookCategory.Name</p>
+                <p><strong>Kitap:</strong> @item.Name</p>   
+                <p><strong>Yazar:</strong> @item.Author</p>
+                <p><strong>Kategori:</strong> @item.bookCategory.Name</p>
                 <a asp-action="BuyBook" asp-route-id="@item.Id" class="btn btn-default">Satın Al</a>
             </div>
         </div>

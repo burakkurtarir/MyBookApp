@@ -30,3 +30,4 @@ C:\Users\Berk\source\repos\MyBookApp\MyBookApp\obj\Debug\netcoreapp2.1\MyBookApp
 C:\Users\Berk\source\repos\MyBookApp\MyBookApp\obj\Debug\netcoreapp2.1\MyBookApp.csproj.CopyComplete
 C:\Users\Berk\source\repos\MyBookApp\MyBookApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\CreateBook.g.cshtml.cs
 C:\Users\Berk\source\repos\MyBookApp\MyBookApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\BuyBook.g.cshtml.cs
+C:\Users\Berk\source\repos\MyBookApp\MyBookApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\RegisterOrSignIn.g.cshtml.cs
