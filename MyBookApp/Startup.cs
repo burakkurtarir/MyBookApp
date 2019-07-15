@@ -37,6 +37,17 @@ namespace MyBookApp
             //Need this for authentication
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
+            //Need this for session
+            services.AddSession(options =>
+            {
+                // Set a timeout for session
+                options.IdleTimeout = TimeSpan.FromHours(12);
+                options.Cookie.HttpOnly = true;
+                // Make the session cookie essential
+                options.Cookie.IsEssential = true;
+            });
+
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             //Need this for database
@@ -63,11 +74,14 @@ namespace MyBookApp
             //Need this for authentication
             app.UseAuthentication();
 
+            //Need this for session
+            app.UseSession();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Home}/{action=RegisterOrSignIn}/{id?}");
             });
         }
     }

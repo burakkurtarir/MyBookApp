@@ -15,7 +15,7 @@ using MyBookApp.ViewModels;
 
 namespace MyBookApp.Controllers
 {
-    ///[Authorize]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -29,7 +29,7 @@ namespace MyBookApp.Controllers
             return View(books);
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         //GET: Home/CreateBookCategory
         public IActionResult CreateBookCategory()
         {
@@ -38,7 +38,7 @@ namespace MyBookApp.Controllers
 
         //POST: Home/CreateBookCategory
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateBookCategory(BookCategory bookCategory)
         {
@@ -50,7 +50,7 @@ namespace MyBookApp.Controllers
             return RedirectToAction("Index");
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         //GET: Home/CreateBook
         public async Task<IActionResult> CreateBook()
         {
@@ -72,7 +72,8 @@ namespace MyBookApp.Controllers
                     Description = viewModel.BookDescription,
                     Author = viewModel.BookAuthor,
                     Stock = viewModel.BookStock,
-                    BookCategoryId = viewModel.BookCategoryId
+                    BookCategoryId = viewModel.BookCategoryId,
+                    Price = viewModel.BookPrice
                 };
 
                 _context.Add(book);
@@ -97,6 +98,7 @@ namespace MyBookApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> BuyBook(Book book)
         {
             if (book == null)
@@ -108,12 +110,22 @@ namespace MyBookApp.Controllers
             {
                 RedirectToAction("BuyBook");
             }
-            if (myBook.Stock >= 1)
+            var userId = HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value;
+            var user = await _context.BookUsers.Where(u => u.Id == Convert.ToInt32(userId)).SingleOrDefaultAsync(); 
+            //Ürün stokta varsa ve kullanıcının parası yetiyorsa
+            if (myBook.Stock >= 1 && user.Wallet >= myBook.Price) 
             {
                 //Kitap satın alındığı için stok 1 azaltıldı ve güncelleştirildi
                 myBook.Stock -= 1;
                 _context.Books.Update(myBook);
                 await _context.SaveChangesAsync();
+
+                //Kullanıcın parası azaltıldı
+                user.Wallet -= myBook.Price;
+                _context.BookUsers.Update(user);
+                await _context.SaveChangesAsync();
+
+                HttpContext.Session.SetString("Wallet", user.Wallet.ToString());
 
                 //TempData["AlertCode"] = AlertCodes.Success;
                 TempData["AlertTitle"] = "Başarılı";
@@ -125,7 +137,7 @@ namespace MyBookApp.Controllers
             else
             {
                 TempData["AlertTitle"] = "Hata";
-                TempData["AlertMessage"] = "Kitap stokta yok";
+                TempData["AlertMessage"] = "Kitap stokta yok veya paranız yetersiz";
                 TempData["AlertType"] = "danger";
 
                 return RedirectToAction("Index");
@@ -156,10 +168,13 @@ namespace MyBookApp.Controllers
                 identity = new ClaimsIdentity(new[] {
                         new Claim(ClaimTypes.Name, databaseUser.Username),
                         new Claim(ClaimTypes.Role, databaseUser.Role),
-                        new Claim("UserId", databaseUser.Id.ToString()) //Custom claim that i created
+                        new Claim("UserId", databaseUser.Id.ToString()), //Custom claim that i created for user id
+                        new Claim("Wallet", databaseUser.Wallet.ToString()) //Claim for wallet
                     }, CookieAuthenticationDefaults.AuthenticationScheme);
 
                 isAuthenticated = true;
+
+                HttpContext.Session.SetString("Wallet", databaseUser.Wallet.ToString());
             }
             if (isAuthenticated)
             {
@@ -194,8 +209,11 @@ namespace MyBookApp.Controllers
                     identity = new ClaimsIdentity(new[] {
                         new Claim(ClaimTypes.Name, bookUser.Username),
                         new Claim(ClaimTypes.Role, bookUser.Role),
-                        new Claim("UserId", bookUser.Id.ToString()) //Custom claim that i created
+                        new Claim("UserId", bookUser.Id.ToString()), //Custom claim that i created
+                        new Claim("Wallet", bookUser.Wallet.ToString()) //Claim for wallet
                     }, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    HttpContext.Session.SetString("Wallet", bookUser.Wallet.ToString());
 
                     isAuthenticated = true;
                 }
@@ -210,10 +228,30 @@ namespace MyBookApp.Controllers
             return RedirectToAction("RegisterOrSignIn");
         }
 
+        [Authorize]
         public IActionResult LogOut()
         {
             var logout = HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("RegisterOrSignIn");
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<float> LoadMoney(float moneyValue)
+        {
+            var userId = HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value;
+            var user = await _context.BookUsers.Where(u => u.Id == Convert.ToInt32(userId)).SingleOrDefaultAsync();
+
+            user.Wallet += moneyValue;
+            _context.BookUsers.Update(user);
+            await _context.SaveChangesAsync();
+
+            HttpContext.Session.SetString("Wallet", user.Wallet.ToString());
+            //var identity = HttpContext.User.Identity as ClaimsIdentity; 
+            //identity.RemoveClaim(identity.FindFirst("Wallet"));
+            //identity.AddClaim(new Claim("Wallet", user.Wallet.ToString()));
+
+            return user.Wallet;
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

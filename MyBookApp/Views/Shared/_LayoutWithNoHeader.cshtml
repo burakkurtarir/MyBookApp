@@ -17,34 +17,7 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MyBookApp</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li><a asp-controller="Home" asp-action="CreateBookCategory">Create Book Category</a></li>
-                        <li><a asp-controller="Home" asp-action="CreateBook">Create Book</a></li>
-                    }
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <li><a asp-controller="Home" asp-action="LogOut">Log Out</a></li>
-                    }
-                </ul>
-            </div>
-        </div>
-    </nav>
-
+   
     <partial name="_CookieConsentPartial" />
 
     <div class="container body-content">

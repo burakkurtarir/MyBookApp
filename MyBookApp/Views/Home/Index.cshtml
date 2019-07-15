@@ -1,10 +1,22 @@
 ﻿@model IEnumerable<Book>
+@using Microsoft.AspNetCore.Http
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <hr />
 <h2>Home Page</h2>
+<hr />
+
+<div class="container">
+    <div class="row">
+        <h3>Welcome @User.Identity.Name, you are a @User.FindFirst(claim => claim.Type == System.Security.Claims.ClaimTypes.Role)?.Value</h3>
+        <h3 id="wallet">
+            Wallet: @Context.Session.GetString("Wallet") TL
+        </h3>
+        <button class="btn btn-success" onclick="LoadMoney()">Load Money</button>
+    </div>
+</div>
 <hr />
 
 @if (TempData["AlertMessage"] != null)
@@ -18,28 +30,28 @@
 }
 
 @*<h2>@Context.User.Identity.Name</h2>
-<h2>@Context.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value</h2>*@
+    <h2>@Context.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value</h2>*@
 
 <div class="container">
     @foreach (var item in Model)
     {
         <div class="col-md-4 col-sm-6 col-xs-12">
             <div class="div-book">
-                <img src="@item.ImageUrl" style="width:50%; height:50%; margin-bottom:10px;" />
-                <p><strong>Kitap:</strong> @item.Name</p>   
-                <p><strong>Yazar:</strong> @item.Author</p>
-                <p><strong>Kategori:</strong> @item.bookCategory.Name</p>
-                <a asp-action="BuyBook" asp-route-id="@item.Id" class="btn btn-default">Satın Al</a>
+                <img src="@item.ImageUrl" style="width:50%; height:250px; margin-bottom:10px;" />
+                <p><strong>Name:</strong> @item.Name</p>
+                <p><strong>Author:</strong> @item.Author</p>
+                <p><strong>Category:</strong> @item.bookCategory.Name</p>
+                <a asp-action="BuyBook" asp-route-id="@item.Id" class="btn btn-default">Buy the book</a>
             </div>
         </div>
     }
 </div>
 
-@*@section scripts{ 
-<script>
-    $('.alert').alert();
-</script>
-}*@
+@*@section scripts{
+    <script>
+        $('.alert').alert();
+    </script>
+    }*@
 
 @*<table class="table">
         <thead>

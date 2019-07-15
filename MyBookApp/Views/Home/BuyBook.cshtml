@@ -1,4 +1,5 @@
 ﻿@model Book
+@using Microsoft.AspNetCore.Http
 @{
     ViewData["Title"] = "Buy Book";
 }
@@ -8,24 +9,35 @@
 <hr />
 
 <div class="container">
+    <div class="row">
+        <h3>Welcome @User.Identity.Name, you are a @User.FindFirst(claim => claim.Type == System.Security.Claims.ClaimTypes.Role)?.Value</h3>
+        <h3 id="wallet">
+            Wallet: @Context.Session.GetString("Wallet") TL
+        </h3>
+        <button class="btn btn-success" onclick="LoadMoney()">Load Money</button>
+    </div>
+</div>
+<hr />
+
+<div class="container">
     <div class="col-md-12">
         <div class="col-md-6" style="padding:8px;">
             <img src="@Model.ImageUrl" style="width:50%; height:40%;" />
         </div>
         <div class="col-md-6" style="padding:8px;">
-            <p><strong>Kitap:</strong> @Model.Name</p>
-            <p><strong>Yazar:</strong> @Model.Author</p>
-            <p><strong>Kategori:</strong> @Model.bookCategory.Name</p>
-            <p><strong>Açıklama:</strong> @Model.Description</p>
-            <p><strong>Stok:</strong> @Model.Stock Adet</p>
-            <p><strong>Fiyat:</strong> @Model.Price TL</p>
+            <p><strong>Name:</strong> @Model.Name</p>
+            <p><strong>Author:</strong> @Model.Author</p>
+            <p><strong>Category:</strong> @Model.bookCategory.Name</p>
+            <p><strong>Description:</strong> @Model.Description</p>
+            <p><strong>Stock:</strong> @Model.Stock Adet</p>
+            <p><strong>Price:</strong> @Model.Price TL</p>
             <form asp-action="BuyBook">
                 <div asp-validation-summary="ModelOnly"></div>
                 <div class="form-group">
                     <input type="hidden" value="@Model.Id" />
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Kitabı Satın Al" class="btn btn-default" />
+                    <input type="submit" value="Buy the book" class="btn btn-default" />
                 </div>
             </form>
         </div>
